@@ -9,7 +9,7 @@ Navegador
     → src/domain.mjs: transições puras e relatórios
     → localStorage: workspace versionado com múltiplos exercícios
     → download: relatório JSON por exercício
-Node server.mjs: quatro rotas estáticas explícitas, em 127.0.0.1
+Node server.mjs: cinco rotas estáticas explícitas, em 127.0.0.1
 ```
 
 ## Modelo de dados
@@ -66,6 +66,13 @@ fora da lista nem aceita operações de persistência. A trilha local é didáti
 registro vêm do computador em UTC; horários observados e prazos são textos sujeitos à validação humana.
 
 ## Fronteira de evolução
+
+O módulo opcional `src/demo.mjs` cria três checkpoints fictícios por meio das mesmas transições do motor:
+preparação, execução com pendências e encerramento. `loadDemo` clona o workspace, adiciona processo e
+exercícios sem substituir registros e identifica o conjunto por `demo.id`. Novo carregamento abre o
+conjunto existente, preservando progresso. Nenhum dado demonstrativo é carregado pela fábrica genérica.
+As cópias são independentes. O roteiro e a apresentação de decisões em português ficam na interface;
+não há lógica específica do cenário em `src/domain.mjs`.
 
 Para colaboração real: autenticação, autorização por organização/exercício no servidor, segregação de
 funções, eventos reservados mantidos no servidor, transações e versionamento de concorrência no banco,

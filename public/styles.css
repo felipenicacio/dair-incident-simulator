@@ -125,3 +125,5 @@ h1{font-size:26px}
 main{padding:16px}
 .tabs{gap:18px}
 }
+
+.demo-guide{background:#f0f8f8;border-color:#c8e2e4}.demo-guide h2{margin-top:16px}.demo-guide li{font-size:13px;line-height:1.8;margin:8px 0}.demo-tag{display:inline-block;font-size:9px;color:#147d86;letter-spacing:.7px}.table-scroll table{min-width:720px}

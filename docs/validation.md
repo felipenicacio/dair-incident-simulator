@@ -1,5 +1,19 @@
 # Validação — v0.2
 
+## Complemento: demonstração opcional v0.2.1
+
+A suíte passa a **18 testes**: os 12 testes da estrutura genérica e seis adicionais para carregamento
+sem alteração dos registros existentes, estados dos checkpoints, referências/autoria/cronologia,
+idempotência com progresso preservado, independência das cópias e correção da atividade devolvida.
+O teste HTTP também verifica a entrega do módulo demonstrativo. A checagem de sintaxe inclui o módulo.
+
+Na interface, o botão carrega três exercícios fictícios e um procedimento reutilizável. Foram conferidos
+os estados, os dois pareceres de ACA-002 e a navegação até as versões da decisão. O roteiro detalhado
+está em [demo-walkthrough.md](demo-walkthrough.md). As decisões agora são exibidas com rótulos em português.
+
+O PR demonstrativo depende da branch do PR #2 e não faz merge automático. A criação genérica continua
+vazia; o usuário escolhe quando adicionar o conjunto preenchido.
+
 ## Base e preservação
 
 Em 29/10/2026, o PR #1 permanecia aberto e sem merge. A nova branch

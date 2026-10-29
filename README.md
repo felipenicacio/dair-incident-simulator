@@ -1,6 +1,6 @@
 # DAIR Incident Simulator
 
-**Versão 0.2 — ambiente genérico de exercícios inspirado na organização do IRIS.**
+**Versão 0.2.1 — ambiente genérico inspirado na organização do IRIS, com exemplo preenchido opcional.**
 
 Produto próprio, em português, para preparar e conduzir simulações corporativas. A instalação começa
 com **zero exercícios e zero processos**. Não há cenário, eventos, atividades, rodadas, quantidades ou
@@ -15,6 +15,19 @@ npm start
 ```
 
 Abra [http://127.0.0.1:3000](http://127.0.0.1:3000).
+
+## Explorar um exercício preenchido
+
+No painel, com o papel **Facilitador**, clique em **Explorar exemplo preenchido**. O carregamento é
+opcional e preserva seus registros. São adicionadas três cópias independentes de um cenário fictício
+de compartilhamento indevido de documentos: **Preparação**, **Para continuar** e **Concluído para consulta**.
+
+Comece pela cópia concluída para ler evidências, pareceres, decisões e debrief. Use a cópia em andamento
+para corrigir uma atividade devolvida e praticar o restante. Na própria tela há roteiro e botões para
+assumir os participantes fictícios. Reabrir o exemplo preserva o progresso, sem duplicar registros.
+
+Veja o [roteiro detalhado do exemplo](docs/demo-walkthrough.md). Se o servidor já estava aberto antes
+desta atualização, encerre com **Ctrl+C**, execute `npm start` novamente e recarregue o navegador.
 
 ```sh
 npm run check

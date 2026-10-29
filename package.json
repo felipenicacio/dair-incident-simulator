@@ -1,6 +1,6 @@
 {
   "name": "dair-incident-simulator",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -9,6 +9,6 @@
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test",
-    "check": "node --check src/domain.mjs && node --check public/app.mjs && node --check server.mjs"
+    "check": "node --check src/domain.mjs && node --check src/demo.mjs && node --check public/app.mjs && node --check server.mjs"
   }
 }

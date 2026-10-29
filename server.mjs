@@ -5,7 +5,8 @@ const routes = new Map([
   ['/', ['public/index.html', 'text/html; charset=utf-8']],
   ['/app.mjs', ['public/app.mjs', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['public/styles.css', 'text/css; charset=utf-8']],
-  ['/domain.mjs', ['src/domain.mjs', 'text/javascript; charset=utf-8']]
+  ['/domain.mjs', ['src/domain.mjs', 'text/javascript; charset=utf-8']],
+  ['/demo.mjs', ['src/demo.mjs', 'text/javascript; charset=utf-8']]
 ]);
 export function createServer() {
   return http.createServer(async (req, res) => {

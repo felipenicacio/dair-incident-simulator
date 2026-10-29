@@ -1,78 +1,88 @@
 # DAIR Incident Simulator
 
-Plataforma de treinamento corporativo de resposta a incidentes envolvendo dados pessoais.
+**Versão 0.2 — ambiente genérico de exercícios inspirado na organização do IRIS.**
 
-MVP 0.1: um facilitador conduz um exercício em uma estação compartilhada. A equipe executa atividades,
-produz evidências simuladas, registra decisões e recebe avaliação humana de execução, eficácia e lacunas
-do processo interno. Não há envio de comunicações reais.
+Produto próprio, em português, para preparar e conduzir simulações corporativas. A instalação começa
+com **zero exercícios e zero processos**. Não há cenário, eventos, atividades, rodadas, quantidades ou
+deliberações predefinidas. O conteúdo é criado pelo facilitador para cada organização.
 
-## Executar
+## Executar e verificar
 
-Requer Node.js 22 ou superior (validado em Node 24). Sem dependências externas ou etapa de instalação.
+Node.js 22 ou superior (validado em Node 24). Sem instalação de dependências.
 
 ```sh
 npm start
 ```
 
-Abra [http://127.0.0.1:3000](http://127.0.0.1:3000). O servidor aceita apenas conexões locais.
-Para outra porta, configure a variável de ambiente `PORT` antes de iniciar.
+Abra [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
 ```sh
 npm run check
 npm test
 ```
 
+## Organização da plataforma
+
+- **Exercícios:** painel com situação, organização e progresso; criação de exercícios em branco.
+- **Processos de resposta:** procedimentos independentes dos cenários, reutilizáveis e versionados.
+- **Ambiente do exercício:** Visão geral, Atividades, Evidências, Decisões, Cronologia, Notas, Equipe,
+  Facilitador e Debrief.
+
+A referência é a organização de trabalho do [IRIS](https://github.com/dfir-iris/iris-web): lista de casos,
+ambiente do caso e registros separados por finalidade. O código, a interface e o motor são próprios.
+Não é um fork, tradução ou distribuição do IRIS. [Mapeamento das telas](docs/product-model.md).
+
 ## Primeiro exercício
 
-1. Como **Facilitador**, informe seu nome. Antes de iniciar, adapte o título, o fluxo interno e acrescente
-   atividades com papel, rodada, waypoint DAIR e critérios de aceite.
-2. Inicie o exercício e atribua cada atividade pelo nome exato do participante.
-3. Alterne nome e papel para o participante atribuído. Registre evidências com origem, coletor/custódia
-   simulada, horário com fuso e natureza do registro. Submeta a atividade ao facilitador.
-4. Retorne ao papel **Facilitador**. Avalie execução, eficácia e lacunas do procedimento separadamente.
-   Aprove ou devolva com justificativa. Uma devolução exige nova evidência antes da ressubmissão.
-5. Libere o próximo evento quando adequado ao exercício, inclusive com tarefas pendentes. A exportação
-   via token persistente provoca a segunda iteração, preservando as decisões e os registros anteriores.
-6. No papel **Controlador**, registre a decisão regulatória com evidências, afetação significativa,
-   categorias do RCIS, deliberações sobre ANPD e titulares, ciência e prazo validado. Para reavaliar,
-   selecione a decisão anterior; ambas permanecem no histórico.
-7. Libere a última rodada, conclua recuperação e debrief, valide todas as atividades e encerre.
-   O motor também exige decisão regulatória no segundo ciclo. Exporte o relatório JSON a qualquer momento.
+1. No papel **Facilitador**, cadastre um procedimento em **Processos de resposta**.
+2. Em **Exercícios**, crie um exercício em branco e abra a aba **Facilitador**.
+3. Defina organização fictícia, objetivos e contexto. Se aplicável, marque a exigência de avaliação
+   regulatória para encerramento. Selecione uma versão do processo de resposta.
+4. Cadastre facilitador e participantes nos papéis necessários. Adicione eventos opcionais e atividades
+   com critérios de aceite, papel responsável e, opcionalmente, waypoint DAIR e evento de liberação.
+5. Revise e inicie. Nas atividades disponíveis, atribua o responsável cadastrado no papel correspondente.
+6. Alterne nome e papel para o participante: registre evidência simulada com origem, horário/fuso e
+   natureza do registro e submeta. Volte ao facilitador para aprovar ou devolver com parecer fundamentado.
+7. Libere eventos individualmente na área do facilitador. Abra novo ciclo com justificativa quando a
+   resposta precisar ser reavaliada. Nenhuma liberação exige concluir todas as atividades anteriores.
+8. Use Notas e Decisões para registrar análises e deliberações vinculadas às evidências. Decisões
+   regulatórias são registradas pelo papel Controlador, com campos separados e revisão humana.
+9. Após validar todas as atividades, consolide lições e melhorias na aba Debrief e encerre. A decisão
+   regulatória só é exigida se prevista na preparação. Não há número obrigatório de eventos ou ciclos.
+10. Exporte o relatório JSON. O facilitador exporta o planejamento completo, inclusive eventos reservados;
+    os demais papéis exportam apenas eventos liberados e atividades disponíveis.
 
-**Persistência:** o exercício fica no armazenamento local deste navegador e desta origem (host/porta).
-Limpar dados do navegador elimina o exercício; exporte o relatório antes. Não há importação/restauração
-de relatório nesta versão. Para novo exercício, use outro perfil de navegador ou, após exportar,
-limpe os dados locais desta origem. Não abra várias abas para editar simultaneamente.
+## Dados locais e compatibilidade
 
-## Cenário e referências
+Cada navegador/origem mantém seu painel e exercícios em `dair-workspace-v2`. Os dados da versão anterior
+em `dair-exercise-v1` são preservados separadamente, sem carregá-los como modelo; um aviso permite
+exportá-los. Não há migração automática nem importação/restauração de relatórios nesta entrega.
+A alteração de um processo na biblioteca não altera a versão preservada nos exercícios.
 
-O caso fictício **INC-2026-001** adapta o
-[dair-privacy-incident-response-playbook](https://github.com/felipenicacio/dair-privacy-incident-response-playbook):
-200 registros inicialmente identificados, bloqueio de conta insuficiente, exportação posterior de
-30.000 titulares por token persistente e reentrada no loop de resposta. Novos eventos são liberados
-pelo facilitador; decisões são abertas e avaliadas por humanos, sem árvore automática de consequências.
+Limpar dados do navegador elimina os registros locais. Evite edição simultânea em várias abas;
+o recarregamento por alteração externa não oferece transações nem controle de concorrência.
 
-- DAIR: Joshua Wright / SANS Institute, com **Scope, Contain, Eradicate, Recover** revisitáveis.
-- LGPD, art. 48 e Resolução CD/ANPD nº 15/2024: avaliação humana contextual e rastreável.
-- [Arquitetura e modelo](docs/architecture.md)
-- [Rastreabilidade metodológica e regulatória](docs/references.md)
-- [Validação, roteiro de aceite e limitações](docs/validation.md)
+## Escopo desta etapa
 
-## Alcance e limites
+Esta entrega é o **protótipo navegável funcional** do modelo genérico, com persistência local e motor
+testado. Não é ainda a versão de acesso individual por computadores diferentes. A alternância de
+papéis é uma convenção de demonstração: não há autenticação, autorização confiável no servidor,
+sigilo real de eventos futuros, anexos, cadeia de custódia forense ou auditoria inviolável.
+O papel Observador é somente leitura pelo motor do exercício. O facilitador pode avaliar o próprio
+trabalho nesta demonstração; segregação de funções real exige evolução de identidade e permissões.
 
-Esta é a base jogável do produto, para treinamento com dados fictícios. A escolha de papel é uma
-convenção do exercício: qualquer pessoa com acesso ao navegador pode alternar os papéis ou modificar
-os dados locais. Eventos futuros estão no código entregue ao navegador; ocultá-los na interface não
-oferece sigilo contra inspeção. O facilitador pode validar o próprio debrief nesta demonstração.
+Preparação permite adicionar registros; edição de contexto e nova vinculação de processo são possíveis
+antes do início. Edição/exclusão de atividades, eventos e membros não faz parte desta entrega.
+Nenhuma comunicação real é enviada e não há cálculo automático de prazo ou conformidade.
 
-Não há contas, sessões autenticadas, colaboração entre computadores, isolamento entre organizações,
-upload de arquivos, preservação forense, assinatura de evidências, proteção contra adulteração,
-cálculo automático de prazo regulatório ou atestado de conformidade. Não publique esta versão como
-serviço corporativo compartilhado. A arquitetura documenta a evolução necessária.
+- [Modelo do produto e critérios de aceite](docs/product-model.md)
+- [Arquitetura, dados e evolução](docs/architecture.md)
+- [Fontes e rastreabilidade metodológica](docs/references.md)
+- [Testes e validação](docs/validation.md)
 
-O repositório estava vazio na inspeção de 29/10/2026. A `main` recebeu somente este README em sua
-forma mínima inicial para permitir um pull request; todo o MVP e a documentação expandida seguem
-na branch `feature/mvp-incident-simulation`, sem merge automático.
+O PR anterior permanece preservado. Esta etapa segue na branch
+`feature/iris-inspired-exercise-workspace`, para revisão sem merge automático.
 
-Adaptação independente, sem endosso da SANS ou ANPD. Créditos dos materiais de referência em
-[fontes e atribuições](docs/references.md). Nenhuma licença de terceiros foi presumida para o código novo.
+DAIR: Joshua Wright / SANS. Referência metodológica:
+[dair-privacy-incident-response-playbook](https://github.com/felipenicacio/dair-privacy-incident-response-playbook).
+Produto independente, sem endosso institucional. Não presume decisão jurídica ou correção do processo interno.

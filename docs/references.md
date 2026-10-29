@@ -1,46 +1,44 @@
-# Fontes, atribuições e rastreabilidade
+# Fontes e rastreabilidade — v0.2
 
-Consulta em **29/10/2026**. Material didático independente. Referências evoluem; o facilitador deve
-revisar as regras aplicáveis à organização e ao contexto antes de preparar exercícios.
+## IRIS como modelo de organização
 
-## Fontes primárias
+- [Repositório IRIS](https://github.com/dfir-iris/iris-web)
+- [Documentação oficial](https://docs.dfir-iris.org/latest/)
 
-- [Dynamic Incident Response — Joshua Wright / SANS](https://www.sans.org/engage/dynamic-incident-response)
-  e [livro e modelo DAIR](https://dynamicincidentresponse.com/): resposta iterativa, verificação,
-  triagem, delimitação e loop Scope/Contain/Eradicate/Recover. Autoria atribuída a Joshua Wright;
-  esta implementação não reproduz o livro ou o pôster e não implica endosso.
-- [Playbook de referência — Felipe Nicácio](https://github.com/felipenicacio/dair-privacy-incident-response-playbook),
-  materiais autorais declarados CC BY 4.0 no README consultado. A adaptação transforma o procedimento
-  em atividades, injeções e critérios; reduz e parafraseia o caso fictício, sem copiar instrumentos binários.
-  [Procedimento](https://github.com/felipenicacio/dair-privacy-incident-response-playbook/blob/main/playbook/01-procedimento-operacional.md),
-  blob consultado `605c8b2673899df9cc3fb4d364fd15e0fdc1170c`;
-  README consultado: blob `61cc41c9cf31efaef7f45026fa1804a46ac6495f`.
-- [LGPD — Lei nº 13.709/2018, texto compilado](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm),
-  especialmente art. 48: deliberação sobre comunicação à autoridade e aos titulares.
-- [ANPD — Comunicação de Incidente de Segurança](https://www.gov.br/anpd/pt-br/canais_atendimento/agente-de-tratamento/comunicado-de-incidente-de-seguranca-cis),
-  orientação oficial relativa ao RCIS, Resolução CD/ANPD nº 15/2024. A página consultada informa
-  prazo geral de três dias úteis nos arts. 6º e 9º e procedimento atual no SEI!ANPD.
-  A plataforma não implementa peticionamento nem replica canais de versões anteriores do playbook.
+A organização por casos, tarefas, evidências, notas, equipe, cronologia e relatórios orienta a navegação
+do produto próprio. A adaptação conceitual para exercícios está descrita em [product-model.md](product-model.md).
+Não há importação de código, componentes, marca ou imagens do IRIS, nem dependência de sua instalação.
+O repositório IRIS declara LGPL-3.0; eventual reutilização futura de código exige avaliação específica.
 
-## Mapeamento de requisitos
+## Referências metodológicas, sem cenário predefinido
 
-| Referência / princípio | Comportamento implementado | Limite / revisão humana |
+- [DAIR — Joshua Wright / SANS](https://www.sans.org/engage/dynamic-incident-response)
+  e [livro/modelo](https://dynamicincidentresponse.com/): verificação, triagem e loop
+  Scope/Contain/Eradicate/Recover revisitáveis. O facilitador pode classificar atividades por waypoint
+  e abrir ciclos fundamentados; a plataforma não impõe uma sequência de fases.
+- [dair-privacy-incident-response-playbook — Felipe Nicácio](https://github.com/felipenicacio/dair-privacy-incident-response-playbook):
+  referência metodológica de processo e governança. Conteúdos autorais declarados CC BY 4.0 pelo projeto.
+  O cenário demonstrativo desse repositório não é importado, preenchido nem sugerido como padrão.
+- [LGPD — texto compilado, especialmente art. 48](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm).
+- [ANPD — Comunicação de Incidente de Segurança / RCIS](https://www.gov.br/anpd/pt-br/canais_atendimento/agente-de-tratamento/comunicado-de-incidente-de-seguranca-cis).
+
+## Aplicação no produto
+
+| Princípio | Implementação | Limite |
 |---|---|---|
-| DAIR: resposta dinâmica | Evento 2 incrementa ciclo; novas atividades com anteriores abertas | Cenário fixo de três rodadas; não cobre todos os padrões de incidente |
-| DAIR: verificar resposta | Critérios pedem testes de contenção/recuperação; facilitador avalia eficácia | Texto fornecido pelo participante não comprova execução real |
-| Prepare e processo interno | Configurar procedimento e acrescentar atividade/papel/critério | Não valida automaticamente qualidade do procedimento |
-| Evidências e incertezas | Origem, coletor/custódia textual, fuso e classificação epistemológica | Sem upload, hash ou cadeia de custódia forense |
-| LGPD art. 48 | Deliberação pelo papel Controlador; ANPD e titulares em campos separados | Papel é convenção local; não comprova representação legal |
-| RCIS art. 5º | Campos separados para afetação significativa e categorias I a VI | Avaliar requisitos cumulativos; larga escala não tem limiar numérico automático |
-| RCIS arts. 6º/9º | Marco de ciência, prazo validado, fundamento e responsável | Sem cálculo; feriados, exceções e eventual regime específico exigem validação |
-| Reavaliação e governança | Novas decisões com supersedes, ciclo, evidências e histórico | Não se certifica conformidade por contagem de tarefas |
-| Debrief | Atividade e avaliação separam execução, eficácia e lacunas; relatório JSON | Melhorias são textuais com responsável e prazo, sem tracker dedicado |
+| Processo e cenário independentes | Biblioteca de procedimentos e cópia versionada no exercício | Atividades são definidas por exercício |
+| Resposta iterativa DAIR | Liberação livre de eventos e novo ciclo com motivo | Sem inferência automática de necessidade de reentrada |
+| Evidência e incerteza | Texto, origem, horário/fuso e natureza | Sem comprovação forense ou hash de arquivo |
+| Avaliação humana | Parecer separa execução, eficácia e lacunas | Preenchimento não demonstra correção ou conformidade |
+| LGPD/ANPD quando aplicáveis | Exigência regulatória configurável; decisão pelo Controlador | Não determina automaticamente aplicabilidade |
+| Rastreabilidade regulatória | Afetação significativa, categorias, ANPD/titulares, ciência, prazo e fundamento | Sem cálculo automático, envio ou validação jurídica |
+| Aprendizagem | Debrief com lições e melhorias | Sem gestão dedicada do plano de ação |
 
-As categorias do art. 5º do RCIS abrangem dados sensíveis; crianças, adolescentes ou idosos;
-financeiros; autenticação; sigilo legal, judicial ou profissional; e larga escala. A presença de
-categoria isolada não substitui a análise contextual de risco ou dano relevante. A decisão deve
-explicitar fatos, hipóteses, incertezas e fundamento; pode ser revista com novas evidências.
+A decisão regulatória exige fundamento contextual e não deriva de quantidade, pontuação ou categoria
+isolada. Os campos permitem registrar requisitos cumulativos do art. 5º do RCIS e deliberações separadas
+sobre ANPD e titulares. Prazo aplicável, calendário, feriados, marco de ciência e eventuais exceções
+exigem avaliação humana. Novo ciclo não reinicia prazo automaticamente.
 
-O prazo validado não deve ser reiniciado automaticamente por uma nova injeção ou reavaliação.
-A orientação de retenção de incidentes reais não é implementada pelo armazenamento local do exercício.
-Este MVP não é ferramenta de registro regulatório de incidentes reais e não oferece certificação jurídica.
+As referências regulatórias orientam o desenho dos campos, não atestam conformidade do exercício.
+Regras vigentes e contexto devem ser revisados ao preparar o treinamento. Produto independente,
+sem endosso da SANS, do IRIS ou da ANPD; não destinado a operar incidentes reais nesta versão.

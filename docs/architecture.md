@@ -1,78 +1,76 @@
-# Arquitetura do MVP
+# Arquitetura — ambiente genérico v0.2
 
-## Decisão de implementação
-
-O repositório estava vazio. Esta primeira entrega usa módulos JavaScript nativos, HTML/CSS e Node.js,
-sem dependências, para tornar o fluxo jogável e testável imediatamente. A sugestão anterior de
-React/TypeScript/Cloudflare permanece uma opção de evolução, não uma infraestrutura já implantada.
-Não há hospedagem ou banco remoto provisionados neste PR.
+A aplicação mantém Node.js e módulos JavaScript nativos, sem dependências externas. Esta etapa evolui
+a experiência e o motor local. Não provisiona infraestrutura ou migra para outra stack.
 
 ```text
-Navegador (estação compartilhada)
-  public/app.mjs ── comandos ──> src/domain.mjs (transições puras)
-       │                              │
-       ├── localStorage <── estado validado + histórico
-       └── exportação JSON (sem eventos futuros)
-
-Node server.mjs ── lista explícita de 4 rotas estáticas, escuta em 127.0.0.1
+Navegador
+  public/app.mjs: painel, biblioteca de processos, ambiente com abas e rotas por hash
+    → src/domain.mjs: transições puras e relatórios
+    → localStorage: workspace versionado com múltiplos exercícios
+    → download: relatório JSON por exercício
+Node server.mjs: quatro rotas estáticas explícitas, em 127.0.0.1
 ```
 
-O motor clona o estado de entrada, verifica invariantes e devolve novo estado. Comandos inválidos
-não alteram o original. A interface persiste antes de apresentar sucesso; erros de armazenamento
-são exibidos e o estado anterior permanece. Dados lidos com formato incompatível não são sobrescritos.
-A validação de leitura é mínima, não é uma fronteira de segurança. Textos do usuário são escapados
-na renderização. O servidor usa CSP, bloqueia arquivos fora da lista e não recebe dados de exercício.
+## Modelo de dados
 
-## Modelo
+| Entidade | Campos e relações |
+|---|---|
+| Workspace v2 | schemaVersion, exercises[], processes[] |
+| Processo | PRO-, título, conteúdo, versão crescente na biblioteca |
+| Exercício | EXE-, organização, objetivos, cenário, estado, ciclo, privacyRequired, processSnapshot |
+| Equipe | Nome e papel no exercício; um nome pode ter mais de um papel |
+| Atividade | ACA-, título, papel, responsável, critérios, waypoint opcional, eventId opcional, estado |
+| Evento | EVT-, título, conteúdo e releasedAt; sem rodada fixa |
+| Evidência | EVD-, atividade, autor, origem/custódia textual, horário observado/fuso, registro, natureza |
+| Decisão | DEC-, tipo, fundamento, resultado, incertezas, evidências, ciclo, supersedes |
+| Nota | NOT-, texto, autoria e horário |
+| Parecer | Revisor, parecer, execução, eficácia, lacuna, justificativa e evidenceCount |
+| Debrief | Lições, melhorias/responsáveis/prazos em texto, autor e horário |
+| Trilha | LOG-, ação, ator/papel, hora, atividade/evento, ciclo e motivo de novo ciclo |
 
-| Entidade | Identificador / campos principais | Relações |
-|---|---|---|
-| Exercício | INC-2026-001; título, procedimento, estado, rodada, ciclo, schemaVersion | Agrega todos os registros |
-| Atividade | ACA-; título, papel, responsável, waypoint, rodada, critério, estado | IDs de evidência e pareceres |
-| Evento/injeção | EVT-; rodada, título, narrativa fictícia | Liberação progressiva pelo facilitador |
-| Evidência | EVD-; autor, origem, horário observado/fuso, horário de registro, natureza, texto, simulated | Uma atividade |
-| Decisão | DEC-; autor, ciclo, fundamento, deliberação, incertezas, evidências, supersedes | Evidências existentes; decisão anterior do mesmo tipo |
-| Parecer | Revisor, horário, aprovar/devolver, execução, eficácia, lacuna, justificativa | Versão da atividade/evidenceCount |
-| Trilha | LOG-; ator, papel, comando, horário, atividade, ciclo, rodada | Cronologia das transições |
+IDs são estáveis dentro do workspace para exercícios/processos e dentro do exercício para os demais
+registros. Não são IDs globais de produção. A biblioteca guarda a versão mais recente do processo;
+cada exercício preserva uma cópia independente da versão selecionada. Alterações posteriores na
+biblioteca não propagam para essas cópias. Antes de iniciar, o facilitador pode selecionar nova versão.
+As atividades são configuradas por exercício; esta versão não contém biblioteca de templates de tarefas.
 
-IDs são sequenciais e estáveis dentro de um exercício. Não são identificadores globais entre sessões.
-Evidências e decisões são acrescentadas; o motor não oferece edição ou exclusão de registros.
-A trilha local é rastreabilidade didática, não log de auditoria resistente a adulteração.
-Horário de registro usa relógio do computador em ISO UTC. Horário observado/fuso e prazo validado
-são textos fundamentados pelo participante, sem validação de calendário ou ordenação cronológica.
+## Invariantes
 
-## Estados e invariantes
+- Estados do exercício: preparação, em andamento, encerrado. Preparação congela ao iniciar.
+- Início exige organização, objetivos, cenário, processo, atividade e equipe cobrindo seus papéis,
+  incluindo facilitador. Eventos e exigência regulatória são opcionais.
+- Eventos são liberados individualmente, em qualquer ordem. Não incrementam ciclos automaticamente.
+- Atividades ficam disponíveis desde início ou após seu evento. O facilitador vê todas para planejar.
+- Novo ciclo exige justificativa e preserva registros anteriores. Não há limite predefinido.
+- Atribuição exige integrante com nome/papel correspondente. Submissão exige evidência nova desde o
+  último parecer. Somente facilitador registra parecer de aprovação/devolução.
+- Decisão exige autoria cadastrada, evidências existentes e fundamento. Regulatório exige Controlador
+  e campos específicos. Uma decisão substituída não recebe duas substituições concorrentes.
+- Encerramento exige todas as atividades validadas e debrief preenchido; exige decisão regulatória
+  somente quando prevista. Eventos sem atividades associadas podem permanecer sem liberação ao encerrar.
+- Observador não altera o exercício. As convenções de papel não constituem segurança de acesso.
 
-Exercício: `preparacao → em_andamento → encerrado`. Configuração só antes do início. Encerramento
-exige todos os eventos liberados, todas as atividades aprovadas e decisão regulatória no ciclo 2.
-Não há reabertura após encerramento nesta versão.
+## Persistência e compatibilidade
 
-Atividade: `pendente → em_execucao → em_validacao → aprovada` ou
-`em_validacao → devolvida → em_validacao`. Atribuição é feita pelo facilitador; execução e submissão
-exigem nome e papel atribuídos. Submissão exige evidência; ressubmissão exige evidência nova após
-o último parecer. Parecer exige avaliações de execução, eficácia e processo e justificativa textual.
+A chave `dair-workspace-v2` inicia vazia e não lê o exercício antigo como semente. A chave anterior
+`dair-exercise-v1` fica intacta; a interface oferece download independente. Relatórios não têm importação.
+O formato básico do workspace é checado ao carregar; isso não constitui validação de entrada não confiável.
 
-Rodadas não são fases obrigatórias do DAIR: liberar nova evidência não depende da conclusão das
-atividades anteriores. A segunda injeção inicia ciclo 2; atividades e decisões anteriores permanecem.
-Waypoints são metadados das atividades, não bloqueios sequenciais.
+As transições clonam o original. A interface salva antes de anunciar sucesso. Falha de armazenamento
+não substitui o estado em memória. Atualizações em outra aba recarregam a página, mas não garantem
+controle de concorrência. Papéis/nome da demonstração reiniciam ao recarregar; os exercícios persistem.
 
-Decisões regulatórias exigem papel Controlador e campos separados para afetação significativa,
-categorias, ANPD, titulares, ciência, prazo validado e fundamento do prazo. Não se inferem resultados
-de pontuação ou volume. O preenchimento não prova correção jurídica; o facilitador avalia o fundamento.
-Não há escolha automática de comunicar/não comunicar nem conexão com canais externos.
+Textos são escapados antes da renderização. CSP restringe recursos à origem; servidor não expõe arquivos
+fora da lista nem aceita operações de persistência. A trilha local é didática e adulterável. Datas de
+registro vêm do computador em UTC; horários observados e prazos são textos sujeitos à validação humana.
 
-## Evolução para ambiente corporativo
+## Fronteira de evolução
 
-1. Extrair o motor para serviço com TypeScript e contratos versionados; manter testes de invariantes.
-2. Autenticar participantes (SSO), autorização no servidor e segregação de organizações, exercícios
-   e funções, incluindo independência da revisão e sigilo real dos eventos ainda não liberados.
-3. Persistir exercícios, versões e trilha no banco com transações, controle de concorrência e backup.
-4. Armazenar anexos em repositório privado, com limites, análise de conteúdo, hashes calculados sobre
-   bytes reais e cadeia de custódia adequada. Nunca criar hashes ou protocolos fictícios como prova real.
-5. Publicar interface React em Cloudflare Pages e API em Workers/D1 ou serviço equivalente após
-   avaliação de requisitos, retenção, privacidade, controle de acesso e adequação da arquitetura.
-6. Editor completo de cenários, eventos condicionais, tempos simulados, múltiplos exercícios,
-   restauração/importação validada e testes de colaboração/acessibilidade.
+Para colaboração real: autenticação, autorização por organização/exercício no servidor, segregação de
+funções, eventos reservados mantidos no servidor, transações e versionamento de concorrência no banco,
+backup/restauração e trilha resistente a adulteração. Somente depois introduzir anexos privados,
+verificação de integridade sobre bytes reais e requisitos de retenção. Reaplicar invariantes no servidor.
 
-A futura API deve reaplicar todas as invariantes no servidor: as verificações do navegador não
-são mecanismo de autorização confiável.
+React/TypeScript e serviços de hospedagem podem ser avaliados nessa evolução; não são entregues aqui.
+O motor mantém contratos testáveis independentemente da futura interface ou persistência.
